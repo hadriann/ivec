@@ -2,25 +2,13 @@
 
 A simple C library for dealing with dynamic arrays (vectors) of integers.
 
-The code is in compliance with C11 and C18.
+## Compliance
 
-## Compiling
-
-When used in a `main.c` program, you can compile with:
-
-```
-gcc ivec.c main.c -o main -Wall
-```
-
-Or do a stricter compilation with:
-
-```
-gcc ivec.c main.c -o main -Wall -std=c11 -pedantic
-```
+The code is compliant with C11 and C18.
 
 ## Usage
 
-Basic usage inside a main function:
+Basic usage inside the `main` function of a `main.c` program:
 
 ```c
 #include <stdio.h>
@@ -44,4 +32,14 @@ int main(void)
     ivec_free(evens);
     return 0;
 }
+```
+
+Compilation can be done with:
+```
+gcc ivec.c main.c -o main -Wall
+```
+
+A *strict-mode* compilation can be obtained with:
+```
+gcc ivec.c main.c -o main -Wall -std=c11 -pedantic
 ```
