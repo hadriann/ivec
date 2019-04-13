@@ -1,5 +1,6 @@
 /**
- * @brief       A library for dynamic integer arrays.
+ * A library for dynamic integer arrays.
+ *
  * @author      Adrian Nita
  * @date        2014
  * @copyright   The MIT License
@@ -8,6 +9,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "ivec.h"
 
 struct ivec {
@@ -15,7 +17,6 @@ struct ivec {
     size_t len;
     size_t maxlen;
 };
-
 
 ivec ivec_new(void)
 {
@@ -26,23 +27,20 @@ ivec ivec_new(void)
     return a;
 }
 
-
 inline int ivec_get(const ivec a, size_t index)
 {
     return a->data[index];
 }
 
-inline void ivec_set(ivec a, int value, size_t index)
+inline void ivec_set(ivec a, size_t index, int value)
 {
     a->data[index] = value;
 }
-
 
 inline size_t ivec_len(const ivec a)
 {
     return a->len;
 }
-
 
 void ivec_push(ivec a, int value)
 {
@@ -54,7 +52,6 @@ void ivec_push(ivec a, int value)
     a->len++;
 }
 
-
 size_t ivec_find(const ivec a, int value)
 {
     for (size_t i = 0; i < a->len; i++) {
@@ -65,16 +62,14 @@ size_t ivec_find(const ivec a, int value)
     return -1;
 }
 
-
 void ivec_sort(ivec a)
 {
-    int* data = a->data;
     size_t len = a->len;
-    size_t i, j;
+    int* data = a->data;
     int aux;
 
-    for (i = 0; i < len - 1; i++) {
-        for (j = i + 1; j < len; j++) {
+    for (size_t i = 0; i < len - 1; i++) {
+        for (size_t j = i + 1; j < len; j++) {
             if (data[j] < data[i]) {
                 aux = data[i];
                 data[i] = data[j];
@@ -84,7 +79,6 @@ void ivec_sort(ivec a)
     }
     a->data = data;
 }
-
 
 void ivec_reverse(ivec a)
 {
@@ -104,22 +98,22 @@ void ivec_reverse(ivec a)
     a->data = data;
 }
 
-
-void ivec_print(const ivec a)
+const char* ivec_stringify(const ivec a)
 {
-    size_t len, i;
-    int* data;
-
-    len = a->len;
-    data = a->data;
-    for (i = 0; i < len; i++) {
-        printf("%d", data[i]);
+    size_t len = a->len;
+    int* data = a->data;
+    static char output[10];
+    char current[10];
+    output[0] = 0;
+    for (size_t i = 0; i < len; i++) {
+        sprintf(current, "%d", data[i]);
+        strcat(output, current);
         if (i < len - 1) {
-            printf(", ");
+            strcat(output, ",");
         }
     }
+    return output;
 }
-
 
 void ivec_free(ivec a)
 {
