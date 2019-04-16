@@ -35,11 +35,11 @@ int main(void)
 ```
 
 Compilation can be done with:
-```
-gcc ivec.c main.c -o main -Wall
+```bash
+$ gcc ivec.c main.c -o main -Wall
 ```
 
 A *strict-mode* compilation can be obtained with:
-```
-gcc ivec.c main.c -o main -Wall -std=c11 -pedantic
+```bash
+$ gcc ivec.c main.c -o main -Wall -std=c11 -pedantic
 ```
