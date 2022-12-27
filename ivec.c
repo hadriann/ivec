@@ -12,37 +12,49 @@
 #include <string.h>
 #include "ivec.h"
 
+#define IVEC_MAXLEN 50
+
 struct ivec {
-    int* data;
+    int *data;
     size_t len;
     size_t maxlen;
 };
 
-ivec ivec_new(void)
+ivec *ivec_create(void)
 {
-    ivec a = malloc(sizeof *a);
+    ivec *a = malloc(sizeof *a);
     a->data = malloc(IVEC_MAXLEN * sizeof *a->data);
     a->len = 0;
     a->maxlen = IVEC_MAXLEN;
     return a;
 }
 
-inline int ivec_get(const ivec a, size_t index)
+void ivec_delete(ivec *a)
+{
+    free(a->data);
+    a->data = NULL;
+    a->len = 0;
+    a->maxlen = 0;
+    free(a);
+    a = NULL;
+}
+
+inline int ivec_get(const ivec *a, size_t index)
 {
     return a->data[index];
 }
 
-inline void ivec_set(ivec a, size_t index, int value)
+inline void ivec_set(const ivec *a, size_t index, int value)
 {
     a->data[index] = value;
 }
 
-inline size_t ivec_len(const ivec a)
+inline size_t ivec_len(const ivec *a)
 {
     return a->len;
 }
 
-void ivec_push(ivec a, int value)
+void ivec_add(ivec *a, int value)
 {
     if (a->len == a->maxlen) {
         a->maxlen *= 2;
@@ -52,7 +64,7 @@ void ivec_push(ivec a, int value)
     a->len++;
 }
 
-size_t ivec_find(const ivec a, int value)
+size_t ivec_find(const ivec *a, int value)
 {
     for (size_t i = 0; i < a->len; i++) {
         if (a->data[i] == value) {
@@ -62,7 +74,7 @@ size_t ivec_find(const ivec a, int value)
     return -1;
 }
 
-void ivec_sort(ivec a)
+void ivec_sort(ivec *a)
 {
     size_t len = a->len;
     int* data = a->data;
@@ -80,47 +92,30 @@ void ivec_sort(ivec a)
     a->data = data;
 }
 
-void ivec_reverse(ivec a)
-{
-    size_t len, i, end;
-    int* data;
-    int aux;
-
-    data = a->data;
-    len = a->len;
-    end = len - 1;
-    for (i = 0; i < len/2; i++) {
-        aux = data[i];
-        data[i] = data[end];
-        data[end] = aux;
-        end--;
-    }
-    a->data = data;
-}
-
-const char* ivec_stringify(const ivec a)
+void ivec_reverse(ivec *a)
 {
     size_t len = a->len;
-    int* data = a->data;
-    static char output[10];
-    char current[10];
+    size_t half = len / 2;
+    for (size_t i = 0; i < half; i++) {
+        size_t end = len - i - 1;
+        int aux = a->data[i];
+        a->data[i] = a->data[end];
+        a->data[end] = aux;
+    }
+}
+
+const char *ivec_join(const ivec *a, const char* separator)
+{
+    static char output[100];
+    char current[100];
     output[0] = 0;
+    size_t len = a->len;
     for (size_t i = 0; i < len; i++) {
-        sprintf(current, "%d", data[i]);
+        sprintf(current, "%d", a->data[i]);
         strcat(output, current);
         if (i < len - 1) {
-            strcat(output, ",");
+            strcat(output, separator);
         }
     }
     return output;
-}
-
-void ivec_free(ivec a)
-{
-    free(a->data);
-    a->data = NULL;
-    a->len = 0;
-    a->maxlen = 0;
-    free(a);
-    a = NULL;
 }
